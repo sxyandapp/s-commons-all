@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0 
  */
 @Slf4j(topic="ObjectUtils")
-public class ObjectUtils {
+public class ObjectUtilsEx {
 	
 	/**
 	 * 调用对象的方法

@@ -12,9 +12,9 @@ package com.simon.commonsall.utils;
  * @date    2017年6月21日
  * @version 1.0 
  */
-public class ByteUtils {
+public class ByteUtilsEx {
 
-    private ByteUtils() {
+    private ByteUtilsEx() {
         // Hide default constructor
     }
 

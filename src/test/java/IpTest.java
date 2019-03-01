@@ -1,3 +1,6 @@
+import java.net.Inet4Address;
+import java.net.InetAddress;
+
 import org.apache.commons.lang3.StringUtils;
 
 /*  
@@ -6,15 +9,16 @@ import org.apache.commons.lang3.StringUtils;
 
 /** 
  * <pre>
- * StringTest 
+ * IpTest 
  * </pre>
  * @author  ShiXiaoyong 
- * @date    2017年6月5日
+ * @date    2018年10月13日
  * @version 1.0 
  */
-public class StringTest {
+public class IpTest {
+	
 	public static void main(String[] args) {
-		String[] ss={"a","b"};
-		System.out.println(StringUtils.startsWithAny("ccc", ss));
+		String stripStart = StringUtils.stripStart("00000100100", "0");
+		System.out.println();
 	}
 }

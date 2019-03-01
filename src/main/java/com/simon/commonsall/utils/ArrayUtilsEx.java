@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
  * @date    2017年8月18日
  * @version 1.0 
  */
-public class ArrayUtils {
+public class ArrayUtilsEx {
 	
 	public static String toString(Collection<?> list) {
 		if (CollectionUtils.isEmpty(list)) {
@@ -49,6 +49,34 @@ public class ArrayUtils {
 			sb.deleteCharAt(0);
 		}
 		return sb.toString();
+	}
+	
+	public static <T> T getFirst(T[] tt) {
+		if (org.apache.commons.lang3.ArrayUtils.isEmpty(tt)) {
+			return null;
+		}
+		return tt[0];
+	}
+	
+	public static <T> T getLast(T[] tt) {
+		if (org.apache.commons.lang3.ArrayUtils.isEmpty(tt)) {
+			return null;
+		}
+		return tt[tt.length-1];
+	}
+	
+	public static byte getFirst(byte[] tt) {
+		if (org.apache.commons.lang3.ArrayUtils.isEmpty(tt)) {
+			return 0;
+		}
+		return tt[0];
+	}
+	
+	public static byte getLast(byte[] tt) {
+		if (org.apache.commons.lang3.ArrayUtils.isEmpty(tt)) {
+			return 0;
+		}
+		return tt[tt.length-1];
 	}
 	
 }

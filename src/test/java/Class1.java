@@ -1,4 +1,4 @@
-import com.simon.commonsall.utils.ClassUtils;
+import com.simon.commonsall.utils.ClassUtilsEx;
 
 /*  
  * Copyright (c) 2016-9999, ShiXiaoyong. All rights reserved. 
@@ -22,7 +22,7 @@ public class Class1<T> {
 	public Class1() {
 		super();
 		Class<? extends Class1> class1 = Class1.class;
-		Class<T> persistentClass = (Class<T>) ClassUtils.getSuperClassGenricType(getClass(),class1, 0);
+		Class<T> persistentClass = (Class<T>) ClassUtilsEx.getSuperClassGenricType(getClass(),class1, 0);
 	}
 	
 }

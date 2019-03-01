@@ -41,7 +41,7 @@ public class IniConfigReader {
 	public static Map<String, Map<String, String>> readIni(String filePath) {
 		try {
 			Map<String, Map<String, String>> data = new LinkedHashMap<String, Map<String, String>>();
-			List<String> lines = com.simon.commonsall.utils.FileUtils.readLines(filePath, ENCODING, lineFilter);
+			List<String> lines = com.simon.commonsall.utils.FileUtilsEx.readLines(filePath, ENCODING, lineFilter);
 			String currentSection = null;
 			Map<String, String> e = null;
 			for (String string : lines) {
@@ -106,7 +106,7 @@ public class IniConfigReader {
 	public static Map<String, String> readKeyValue(String filePath) {
 		try {
 			Map<String, String> data = new LinkedHashMap<String, String>();
-			List<String> lines = com.simon.commonsall.utils.FileUtils.readLines(filePath, ENCODING, lineFilter);
+			List<String> lines = com.simon.commonsall.utils.FileUtilsEx.readLines(filePath, ENCODING, lineFilter);
 			for (String string : lines) {
 				if (StringUtils.isEmpty(string)) {
 					continue;

@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
  * @date   2015年12月19日
  * @since  1.0 
  */
-public class FileUtils {
+public class FileUtilsEx {
 	
 	/**
 	 * 支持去除注释行

@@ -4,6 +4,7 @@
 package com.simon.commonsall.utils;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +33,7 @@ public class ComputerAttributeUtils {
 		try {
 			Process exec = Runtime.getRuntime().exec("fdisk -l");
 			inputStream = exec.getInputStream();
-			List<String> readLines = IOUtils.readLines(inputStream,"UTF-8");
+			List<String> readLines = IOUtils.readLines(inputStream,StandardCharsets.UTF_8);
 			if (CollectionUtils.isNotEmpty(readLines)) {
 				for (String string : readLines) {
 					if (StringUtils.startsWith(string, "Disk identifier:")) {
@@ -126,7 +127,7 @@ public class ComputerAttributeUtils {
 			Process exec = Runtime.getRuntime().exec("ifconfig");
 			inputStream = exec.getInputStream();
 			
-			List<String> readLines = IOUtils.readLines(inputStream,"UTF-8");
+			List<String> readLines = IOUtils.readLines(inputStream,StandardCharsets.UTF_8);
 			if (CollectionUtils.isNotEmpty(readLines) && readLines.size() > 3) {
 				List<List<String>> nn = new ArrayList<>();
 				List<String> n = new ArrayList<>();

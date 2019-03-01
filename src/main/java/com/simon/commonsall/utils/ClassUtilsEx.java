@@ -17,7 +17,7 @@ import org.apache.commons.lang3.ArrayUtils;
  * @date 2017年6月15日
  * @version 1.0
  */
-public class ClassUtils {
+public class ClassUtilsEx {
 
 	public static Class<?> getSuperClassGenricType(final Class<?> finalClazz, final Class<?> currentClazz, final int index) {
 		if (index<0) {

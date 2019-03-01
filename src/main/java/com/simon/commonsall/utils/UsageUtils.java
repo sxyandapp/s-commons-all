@@ -5,6 +5,7 @@ package com.simon.commonsall.utils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -138,7 +139,7 @@ public class UsageUtils {
 		try {
 			Process exec = Runtime.getRuntime().exec("cat /proc/uptime");
 			inputStream = exec.getInputStream();
-			List<String> readLines = IOUtils.readLines(inputStream,"UTF-8");
+			List<String> readLines = IOUtils.readLines(inputStream,StandardCharsets.UTF_8);
 			if (CollectionUtils.isNotEmpty(readLines)) {
 				String string = readLines.get(0);
 				String[] split = StringUtils.split(string);

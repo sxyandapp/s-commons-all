@@ -1,4 +1,4 @@
-import com.simon.commonsall.utils.ArrayUtils;
+import com.simon.commonsall.utils.ArrayUtilsEx;
 
 /*  
  * Copyright (c) 2016-9999, ShiXiaoyong. All rights reserved. 
@@ -16,7 +16,7 @@ public class ArrayUtilsTest {
 	
 	public static void main(String[] args) {
 		Integer[] a= {1,2};
-		String string = ArrayUtils.toString(a);
+		String string = ArrayUtilsEx.toString(a);
 		System.out.println(string);
 		
 	}

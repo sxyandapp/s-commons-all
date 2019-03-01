@@ -3,6 +3,7 @@
  */
 package com.simon.commonsall.utils;
 
+import java.util.Iterator;
 import java.util.Map;
 
 /** 
@@ -13,7 +14,7 @@ import java.util.Map;
  * @date    2017年5月15日
  * @version 1.0 
  */
-public class MapUtils {
+public class MapUtilsEx {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void copy(Map src,Map dest){
@@ -21,8 +22,16 @@ public class MapUtils {
 			return;
 		}
 		for (Object e : src.keySet()) {
-			
 			dest.put(e, src.get(e));
+		}
+	}
+	
+	public static void removeByValue(Map<?,?> src,Object v) {
+		for (Iterator<?> iterator = src.values().iterator(); iterator.hasNext();) {
+			Object type =iterator.next();
+			if (type.equals(v)) {
+				iterator.remove();
+			}
 		}
 	}
 	
