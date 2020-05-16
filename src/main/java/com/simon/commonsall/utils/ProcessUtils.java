@@ -83,25 +83,32 @@ public class ProcessUtils {
 	}
 
 	public static boolean killProcess(String pid) {
+	    if (StringUtils.isEmpty(pid)) {
+	        return false;
+	    }
 		if (Platform.isLinux()) {
-			if (StringUtils.isEmpty(pid)) {
-				return false;
-			}
 			try {
 				Runtime.getRuntime().exec("kill -9 " + pid);
 				return true;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-		return true;
+		}else if(Platform.isWindows()) {
+            try {
+                Runtime.getRuntime().exec("taskkill /F /PID "+pid);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+		return false;
 	}
 	
 	public static boolean killProcessByName(String pname) {
+	    if (StringUtils.isEmpty(pname)) {
+	        return false;
+	    }
 		if (Platform.isLinux()) {
-			if (StringUtils.isEmpty(pname)) {
-				return false;
-			}
 			try {
 				Runtime.getRuntime().exec("pkill " + pname);//正常杀
 				Thread.sleep(300);//必须有间隔
@@ -129,5 +136,4 @@ public class ProcessUtils {
 			System.out.println(e.getMessage());
 		}
 	}
-
 }

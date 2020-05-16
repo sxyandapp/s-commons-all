@@ -23,26 +23,23 @@ import com.simon.tablegenerator.annotation.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /** 
- * <pre>
  * SqlProviderUtils 
- * </pre>
  * @author  ShiXiaoyong 
  * @date    2017年11月24日
  * @version 1.0 
  */
+@Slf4j
 public class SqlProviderUtils {
 	
 	static final ThreadLocal<QueryObject> query = new ThreadLocal<>();
-	
 	public static final String INSERT="_insert";
-	
 	public static final String INSERT_SELECTIVE="_insertSelective";
-	
 	public static final String SELECT="_select";
-	
 	public static final String UPDATE="_update";
+	public static final String UPDATE_SELECTIVE="_updateSelective";
 
 	public static void insertPrepare(String sql) {
 		query.set(new QueryObject(sql));
@@ -56,7 +53,7 @@ public class SqlProviderUtils {
 		query.set(new QueryObject(sql));
 	}
 	
-	public static String insertSelective(Object param1) {
+	public static String _insertSelective(Object param1) {
 		return __insert(param1,false,false);
 	}
 	
@@ -69,14 +66,18 @@ public class SqlProviderUtils {
 	 * @param useCache 是否使用sql缓存
 	 * @return
 	 */
-	static String __insert(Object param1,boolean includeNullField,boolean useCache) {
-		QueryObject queryObject = query.get();
-		query.remove();
-		if (null==queryObject) {
-			throw new NullPointerException("请先调用prepare方法");
-		}
-		return queryObject.sql;
-	}
+    static String __insert(Object param1, boolean includeNullField, boolean useCache) {
+        QueryObject queryObject = query.get();
+        query.remove();
+        if (null == queryObject) {
+            if (includeNullField) {
+                return Tools.generateInsertSql(param1.getClass(), null, useCache);
+            }
+            log.debug("请先调用prepare方法");
+            throw new NullPointerException("请先调用prepare方法");
+        }
+        return queryObject.sql;
+    }
 
 	public static void updatePrepare(String sql) {
 		query.set(new QueryObject(sql));
@@ -90,7 +91,7 @@ public class SqlProviderUtils {
 		query.set(new QueryObject(sql));
 	}
 	
-	public static String updateSelective(Object param1) {
+	public static String _updateSelective(Object param1) {
 		return __update(param1, false, false);
 	}
 	
@@ -103,14 +104,18 @@ public class SqlProviderUtils {
 	 * @param useCache 是否使用sql缓存
 	 * @return
 	 */
-	static String __update(Object param1,boolean includeNullField,boolean useCache) {
-		QueryObject queryObject = query.get();
-		query.remove();
-		if (null==queryObject) {
-			throw new NullPointerException("请先调用prepare方法");
-		}
-		return queryObject.sql;
-	}
+    static String __update(Object param1, boolean includeNullField, boolean useCache) {
+        QueryObject queryObject = query.get();
+        query.remove();
+        if (null == queryObject) {
+            if (includeNullField) {
+                return Tools.generateUpdateSql(param1.getClass(), null, useCache);
+            }
+            log.debug("请先调用prepare方法");
+            throw new NullPointerException("请先调用prepare方法");
+        }
+        return queryObject.sql;
+    }
 	
 	/**
 	 * @author ShiXiaoyong
@@ -123,26 +128,33 @@ public class SqlProviderUtils {
 		query.set(new QueryObject(sql));
 	}
 	
-	public static void _selectPrepare(int keep){
-		QueryObject queryObject = query.get();
-		if (null==queryObject) {
-			return;
-		}
-		queryObject.setKeep(keep);
-	}
+    public static void _selectPrepare(int keep) {
+        QueryObject queryObject = query.get();
+        if (null == queryObject) {
+            return;
+        }
+        queryObject.setKeep(keep);
+    }
 	
-	public static String _select(Object param1){
-		QueryObject queryObject = query.get();
-		if (null==queryObject) {
-			throw new NullPointerException("请先调用prepare方法");
-		}
-		if (1==queryObject.getKeep()) {
-			query.remove();
-		}else {
-			queryObject.setKeep(queryObject.getKeep()-1);
-		}
-		return queryObject.sql;
-	}
+    public static String _select(Object param1) {
+        QueryObject queryObject = query.get();
+        if (null == queryObject) {
+            throw new NullPointerException("请先调用prepare方法");
+        }
+        if (1 == queryObject.getKeep()) {
+            query.remove();
+        } else {
+            queryObject.setKeep(queryObject.getKeep() - 1);
+        }
+        return queryObject.sql;
+    }
+    
+    public static void clear() {
+        QueryObject queryObject = query.get();
+        if (null != queryObject) {
+            query.remove();
+        }
+    }
 	
 	@Getter
 	@Setter
@@ -150,7 +162,6 @@ public class SqlProviderUtils {
 	static class QueryObject{
 		
 		String sql;
-		
 		int keep = 1;
 
 		/**
@@ -163,24 +174,19 @@ public class SqlProviderUtils {
 			super();
 			this.sql = sql;
 		}
-		
 	}
 	
 	public static class Tools{
 		
 		static Map<String, String> SQL_CACHE_INSERT = new HashMap<>();
-		
 		static Map<String, String> SQL_CACHE_UPDATE = new HashMap<>();
-		
-		
 		/**
 		 * update时，会强制忽略的字段
 		 * @author ShiXiaoyong
 		 * @date   2017年11月28日
 		 */
-		static Set<String> updateBanField = new HashSet<>();
-		
-		static final String[] UPDATE_BY_FIELDS_DEFAULT={"id"};
+        static Set<String> updateBanField = new HashSet<>();
+        static final String[] UPDATE_BY_FIELDS_DEFAULT = { "id" };
 		
 		/**
 		 * 更新时，会强制忽略的字段，通常需要将createId,createUptime添加
@@ -245,9 +251,9 @@ public class SqlProviderUtils {
 			}
 			
 			Set<String> where = new LinkedHashSet<>();
-			if (null==updateByFields) {
-				updateByFields = UPDATE_BY_FIELDS_DEFAULT;
-			}
+            if (ArrayUtils.isEmpty(updateByFields)) {
+                updateByFields = UPDATE_BY_FIELDS_DEFAULT;
+            }
 			if (ArrayUtils.isNotEmpty(updateByFields)) {
 				for (String string : updateByFields) {
 					where.add(StringUtils.join(StringUtils.wrap(string, '`'),"=",StringUtils.join("#{",string,"}")));
@@ -334,8 +340,4 @@ public class SqlProviderUtils {
 			return tablename;
 		}
 	}
-	
-	
-	
-	
 }

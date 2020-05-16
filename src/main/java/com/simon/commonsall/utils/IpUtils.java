@@ -26,7 +26,7 @@ public class IpUtils {
 		if (ArrayUtils.getLength(data)<16) {
 			return null;
 		}
-		char[] encodeHex = Hex.encodeHex(data, true);
+		char[] encodeHex = Hex.encodeHex(data);
 
 		int length = 8;
 		StringBuffer sb = new StringBuffer();
@@ -36,25 +36,11 @@ public class IpUtils {
 			if (0 != i) {
 				sb.append(':');
 			}
-			c1 = encodeHex[i * 4];
-			c2 = encodeHex[i * 4 + 1];
-			c3 = encodeHex[i * 4 + 2];
-			c4 = encodeHex[i * 4 + 3];
-			if (c1!='0') {
-				sb.append(c1);
-				sb.append(c2);
-				sb.append(c3);
-				sb.append(c4);
-			}else if(c2!='0') {
-				sb.append(c2);
-				sb.append(c3);
-				sb.append(c4);
-			}else if(c3!='0') {
-				sb.append(c3);
-				sb.append(c4);
-			}else if(c4!='0') {
-				sb.append(c4);
-			}
+			int point=i*4;
+			sb.append(encodeHex[point]);
+			sb.append(encodeHex[point+1]);
+			sb.append(encodeHex[point+2]);
+			sb.append(encodeHex[point+3]);
 		}
 		return sb.toString();
 	}
@@ -64,22 +50,36 @@ public class IpUtils {
 	 * @author ShiXiaoyong
 	 * @date   2018年10月13日
 	 * @param ip6
-	 * @param shortable true:短ipv6,false:unimplement
+	 * @param shortable true:短ipv6,false:长ipv6
 	 * @return
 	 */
 	public static String toIP6(String ip6,boolean shortable) {
-		String[] split = StringUtils.split(ip6,':');
+		String[] split = StringUtils.splitPreserveAllTokens(ip6,':');
 		StringBuilder sb = new StringBuilder();
 		if (shortable) {
+			// for (String string : split) {
+			// 	sb.append(':');
+			// 	sb.append(StringUtils.stripStart(string, "0"));
+			// }
+			// if (sb.length()>0) {
+			// 	sb.deleteCharAt(0);
+			// }
+			throw new NotImplementedException("");
+		}else {
 			for (String string : split) {
-				sb.append(':');
-				sb.append(StringUtils.stripStart(string, "0"));
+				if (StringUtils.isEmpty(string)) {
+					int abcentPart = 8 - StringUtils.countMatches(ip6, ':');
+					for (int i = 0; i < abcentPart; i++) {
+						sb.append(":0000");
+					}
+				} else {
+					sb.append(':');
+					sb.append(StringUtils.leftPad(string, 4, '0'));
+				}
 			}
 			if (sb.length()>0) {
 				sb.deleteCharAt(0);
 			}
-		}else {
-			throw new NotImplementedException("");
 		}
 		return sb.toString();
 	}
@@ -88,6 +88,21 @@ public class IpUtils {
 		if (ArrayUtils.getLength(data)<4) {
 			return null;
 		}
-		return StringUtils.joinWith(",", data[0]& 0xff, data[1]& 0xff, data[2]& 0xff, data[3]& 0xff);
+		return StringUtils.joinWith(".", data[0]& 0xff, data[1]& 0xff, data[2]& 0xff, data[3]& 0xff);
+	}
+	
+	public static byte[] fromIP4(String ipString) {
+	    if (StringUtils.isEmpty(ipString)) {
+            return null;
+        }
+	    String[] split = StringUtils.split(ipString,'.');
+	    if (ArrayUtils.getLength(split)<4) {
+            return null;
+        }
+	    byte[] ip = new byte[4];
+	    for (int i = 0; i < 4; i++) {
+            ip[i] = (byte) Integer.parseUnsignedInt(split[i]);
+        }
+	    return ip;
 	}
 }

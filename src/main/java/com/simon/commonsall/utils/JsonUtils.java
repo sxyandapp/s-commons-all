@@ -1,9 +1,5 @@
 package com.simon.commonsall.utils;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -11,6 +7,8 @@ import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 
 /** 
  * 描述：JsonUtils 
@@ -20,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @date   2015年8月9日
  * @since  1.0 
  */
+@Slf4j
 public class JsonUtils {
 	private static ObjectMapper mapper;
 
@@ -36,57 +35,67 @@ public class JsonUtils {
 //		mapper.setConfig(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		// 若值为Null，不参与序列化
 		mapper.setSerializationInclusion(Include.NON_NULL);
+//        //null转为""
+//        mapper.getSerializerProvider().setNullValueSerializer(new JsonSerializer<Object>() {
+//            @Override
+//            public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
+//                gen.writeObject(StringUtils.EMPTY);
+//            }
+//        });
 	}
 
+	public static Object from(String jsonString) {
+	    if (StringUtils.isEmpty(jsonString)) {
+	        return null;
+	    }
+	    try {
+	        return mapper.readValue(jsonString, Object.class);
+	    } catch (Exception e) {
+	        log.warn("parse json string error:{}",e.getMessage());
+	    }
+	    return null;
+	}
 	/**
 	 * 根据Json值生成类实例
-	 * 
-	 * @param jsonString
-	 *            json字符串
-	 * @param valueType
-	 *            类型
+	 * @param jsonString json字符串
+	 * @param valueType 类型
 	 * @return 若生成失败返回Null
 	 */
 	public static <T> T from(String jsonString, Class<T> valueType) {
-		T t = null;
+	    if (StringUtils.isEmpty(jsonString)) {
+	        return null;
+	    }
 		try {
-			if (StringUtils.isEmpty(jsonString)) {
-				return null;
-			}
-			t = mapper.readValue(jsonString, valueType);
-		} catch (IOException e) {
-			e.printStackTrace();
+			return mapper.readValue(jsonString, valueType);
+		} catch (Exception e) {
+		    log.warn("parse json string error:{}",e.getMessage());
 		}
-		return t;
+		return null;
 	}
 	
 	public static <T> T from(String jsonString, TypeReference<T> valueType) {
-		T t = null;
+	    if (StringUtils.isEmpty(jsonString)) {
+	        return null;
+	    }
 		try {
-			if (StringUtils.isEmpty(jsonString)) {
-				return null;
-			}
-			t = mapper.readValue(jsonString, valueType);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return t;
-	}
-
-	/**
-	 * 将指定实例转为Json字符串
-	 * 
-	 * @param object
-	 * @return 若转换失败Null
-	 */
-	public static String to(Object object) {
-		Writer strWriter = new StringWriter();
-		try {
-			mapper.writeValue(strWriter, object);
+			return mapper.readValue(jsonString, valueType);
 		} catch (Exception e) {
-			e.printStackTrace();
+		    log.warn("parse json string error:{}",e.getMessage());
 		}
-		return strWriter.toString();
-
+		return null;
 	}
+
+    /**
+     * 将指定实例转为Json字符串
+     * @param object
+     * @return 若转换失败Null
+     */
+    public static String to(Object object) {
+        try {
+            return mapper.writeValueAsString(object);
+        } catch (Exception e) {
+            log.warn("parse to json string error:{}", e.getMessage());
+        }
+        return StringUtils.EMPTY;
+    }
 }

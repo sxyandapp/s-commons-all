@@ -16,19 +16,29 @@ import org.apache.commons.collections.CollectionUtils;
  * @version 1.0 
  */
 public class CollectionUtilsEx {
-	
-	public static <T> T getFirst(List<T> list) {
-		if (org.apache.commons.collections.CollectionUtils.isEmpty(list)) {
-			return null;
-		}
-		return list.get(0);
+    
+	@SuppressWarnings("unchecked")
+    public static <T> T getFirst(Object object) {
+	    if (null==object) {
+            return null;
+        }
+		try {
+            return (T) org.apache.commons.collections.CollectionUtils.get(object, 0);
+        } catch (Exception e) {
+        }
+		return null;
 	}
 	
-	public static <T> T getLast(List<T> list) {
-		if (org.apache.commons.collections.CollectionUtils.isEmpty(list)) {
-			return null;
-		}
-		return list.get(list.size()-1);
+	@SuppressWarnings("unchecked")
+    public static <T> T getLast(List<T> list) {
+        if (null == list) {
+            return null;
+        }
+        try {
+            return (T) org.apache.commons.collections.CollectionUtils.get(list, list.size()-1);
+        } catch (Exception e) {
+        }
+		return null;
 	}
 	
     public static void reverseArray(Object bbb) {

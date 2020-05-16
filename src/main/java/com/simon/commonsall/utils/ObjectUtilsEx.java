@@ -76,7 +76,7 @@ public class ObjectUtilsEx {
 			}
 		}
 		if (null != targetMethod) {
-			log.info("{}:{} be invoked with {}", bean, methodName, params);
+			log.debug("{}:{} be invoked with {}", bean, methodName, params);
 			// 分离参数
 			String[] split = null;
 			Class<?>[] parameterTypes = targetMethod.getParameterTypes();

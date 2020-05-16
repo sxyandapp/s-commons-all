@@ -4,10 +4,10 @@
 package com.simon.commonsall.utils;
 
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /** 
  * <pre>
@@ -45,5 +45,61 @@ public class StringUtilsEx {
 		}
 		return baos.toByteArray();
 	}
+	
+	public static int skipAny(final CharSequence cs,int startPosition, final char... searchChars) {
+        if (StringUtils.isEmpty(cs)|| ArrayUtils.isEmpty(searchChars)) {
+            return -1;
+        }
+        while(true) {
+            if (startPosition>= StringUtils.length(cs)) {
+                break;
+            }
+            char charAt = cs.charAt(startPosition);
+            boolean found=false;
+            for (char c : searchChars) {
+                if (charAt==c) {
+                    found=true;
+                    break;
+                }
+            }
+            if (found) {
+                startPosition++;
+                continue;
+            }
+            break;
+        }
+        return startPosition;
+    }
+    
+	public static int indexOfAny(final CharSequence cs,int startPosition, final char... searchChars) {
+        if (StringUtils.isEmpty(cs)|| ArrayUtils.isEmpty(searchChars)) {
+            return -1;
+        }
+        while(true) {
+            if (startPosition>= StringUtils.length(cs)) {
+                break;
+            }
+            char charAt = cs.charAt(startPosition);
+            boolean found=false;
+            for (char c : searchChars) {
+                if (charAt==c) {
+                    found=true;
+                    break;
+                }
+            }
+            if (found) {
+                break;
+            }
+            startPosition++;
+        }
+        return startPosition;
+    }
+	
+    public static String valueOf(Object v) {
+        if (null == v) {
+            return null;
+        }
+        return String.valueOf(v);
+    }
 	
 }

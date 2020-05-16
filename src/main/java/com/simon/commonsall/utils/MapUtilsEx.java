@@ -6,6 +6,8 @@ package com.simon.commonsall.utils;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 /** 
  * <pre>
  * MapUtils 
@@ -34,5 +36,25 @@ public class MapUtilsEx {
 			}
 		}
 	}
+	
+    public static Object remove(Map<?, ?> src, Object k) {
+        if (null == src) {
+            return null;
+        }
+        return src.remove(k);
+    }
+	
+    public static Map<?, ?> removeKeys(Map<?, ?> src, Object... kk) {
+        if (null == src) {
+            return null;
+        }
+        if (ArrayUtils.isEmpty(kk)) {
+            return src;
+        }
+        for (Object k : kk) {
+            src.remove(k);
+        }
+        return src;
+    }
 	
 }
