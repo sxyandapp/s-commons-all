@@ -3,7 +3,6 @@ package com.simon.commonsall.utils;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import lombok.Getter;
@@ -16,16 +15,12 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.time.DateUtils;
 
 /**
  * Created by ShiXiaoyong on 2020/5/11 1:50.
  */
 public class PcapUtils {
 
-<<<<<<< HEAD
-
-=======
     public static Iterator<PcapRecord> read(File file) {
         try {
             FileInputStream fis = FileUtils.openInputStream(file);
@@ -229,7 +224,6 @@ public class PcapUtils {
             } catch (IOException e) {
                 e.printStackTrace();
             }
->>>>>>> c693b8cebef1dbb14a8484318c910912d0208a09
 
             return baos.toByteArray();
         }
